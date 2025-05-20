@@ -1,41 +1,30 @@
 <?php
-header('Content-Type: application/json');
-require_once 'db.php';
+include '../../config.php';
 
 $data = json_decode(file_get_contents('php://input'), true);
+$username = $conn->real_escape_string($data['username']);
+$password = $data['password'];
 
-try {
-    if (empty($data['username']) || empty($data['password'])) {
-        throw new Exception('Заполните все поля');
+$sql = "SELECT * FROM users WHERE username = '$username'";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    $user = $result->fetch_assoc();
+
+    if (password_verify($password, $user['password'])) {
+        echo json_encode([
+            'success' => true,
+            'token' => bin2hex(random_bytes(50)), // или JWT
+            'user' => [
+                'id' => $user['id'],
+                'username' => $user['username'],
+                'is_admin' => $user['is_admin']
+            ]
+        ]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Неверный пароль']);
     }
-
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
-    $stmt->execute([$data['username']]);
-    $user = $stmt->fetch();
-
-    if (!$user || !password_verify($data['password'], $user['password'])) {
-        throw new Exception('Неверный логин или пароль');
-    }
-
-    // Генерируем токен
-    $token = bin2hex(random_bytes(32));
-    $expires = time() + 3600 * 24; // 24 часа
-
-    // Сохраняем токен в БД
-    $stmt = $pdo->prepare("UPDATE users SET token = ?, token_expires = ? WHERE id = ?");
-    $stmt->execute([$token, date('Y-m-d H:i:s', $expires), $user['id']]);
-
-    echo json_encode([
-        'success' => true,
-        'token' => $token,
-        'user' => [
-            'id' => $user['id'],
-            'username' => $user['username'],
-            'is_admin' => $user['is_admin']
-        ]
-    ]);
-
-} catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+} else {
+    echo json_encode(['success' => false, 'message' => 'Пользователь не найден']);
 }
 ?>

@@ -9,113 +9,44 @@ const CONFIG = {
   }
 };
 
-// Инициализация при загрузке
-$(document).ready(function() {
+$(document).ready(function () {
   initDistrictSlider();
   loadNews();
   initAuthSystem();
-  
+  updateAuthUI(); // Обновляем UI при загрузке страницы
+
   if ($('body').hasClass('admin-panel-page')) {
     initAdminPanel();
   }
 });
 
-// Слайдер района
+/* ===== СЛАЙДЕР ===== */
 function initDistrictSlider() {
   const $slider = $('.district-slider');
   if (!$slider.length) return;
 
-  const $slides = $slider.find('.slide');
-  const $dots = $slider.find('.slider-dots');
-  let currentIndex = 0;
-  let interval;
-
-  // Создаем точки навигации
-  $slides.each((index, slide) => {
-    $dots.append(`<span class="dot" data-index="${index}"></span>`);
-  });
-
-  const $allDots = $slider.find('.dot');
-
-  // Показываем слайд
-  function showSlide(index) {
-    $slides.removeClass('active').eq(index).addClass('active');
-    $allDots.removeClass('active').eq(index).addClass('active');
-    currentIndex = index;
-  }
-
-  // Следующий слайд
-  function nextSlide() {
-    const newIndex = (currentIndex + 1) % $slides.length;
-    showSlide(newIndex);
-  }
-
-  // Запуск автоматического переключения
-  function startAutoSlide() {
-    clearInterval(interval);
-    interval = setInterval(nextSlide, 5000);
-  }
-
-  // Обработчики событий
-  $slider.find('.next').click(nextSlide);
-  
-  $slider.find('.prev').click(() => {
-    const newIndex = (currentIndex - 1 + $slides.length) % $slides.length;
-    showSlide(newIndex);
-  });
-
-  $slider.on('mouseenter', () => clearInterval(interval));
-  $slider.on('mouseleave', startAutoSlide);
-
-  $dots.on('click', '.dot', function() {
-    const index = $(this).data('index');
-    showSlide(index);
-  });
-
-  // Инициализация
-  showSlide(0);
-  startAutoSlide();
-}
-
-$(document).ready(function() {
-  initDistrictSlider();
-});
-
-function renderSlides(slides) {
-  let html = '';
-  slides.forEach((slide, index) => {
-    html += `
-    <div class="slide ${index === 0 ? 'active' : ''}">
-      <img src="${slide.image_path}" alt="${slide.title}">
-      <div class="slide-content">
-        <h3>${slide.title}</h3>
-        <p>${slide.description}</p>
-      </div>
-    </div>`;
-  });
-  
-  $('.district-slider').html(html);
-}
-
-function startSlider() {
-  const $slider = $('.district-slider');
-  if ($slider.length === 0) return;
-
   let currentSlide = 0;
-  const slides = $slider.find('.slide');
-  const totalSlides = slides.length;
-  
-  function showSlide(index) {
-    slides.removeClass('active').eq(index).addClass('active');
-  }
-  
-  setInterval(() => {
-    currentSlide = (currentSlide + 1) % totalSlides;
+  const interval = setInterval(() => {
+    currentSlide = (currentSlide + 1) % $slider.find('.slide').length;
     showSlide(currentSlide);
   }, 5000);
+
+  function showSlide(index) {
+    $slider.find('.slide').removeClass('active').eq(index).addClass('active');
+  }
+
+  $slider.find('.next').click(() => {
+    currentSlide = (currentSlide + 1) % $slider.find('.slide').length;
+    showSlide(currentSlide);
+  });
+
+  $slider.find('.prev').click(() => {
+    currentSlide = (currentSlide - 1 + $slider.find('.slide').length) % $slider.find('.slide').length;
+    showSlide(currentSlide);
+  });
 }
 
-/* ===== СИСТЕМА НОВОСТЕЙ ===== */
+/* ===== НОВОСТИ ===== */
 function loadNews() {
   $.get(CONFIG.API.NEWS, function(response) {
     if (response.success) {
@@ -140,7 +71,6 @@ function renderNews(news) {
       </div>
     </article>`;
   });
-  
   $('.news-grid').html(html);
 }
 
@@ -153,7 +83,7 @@ function initAuthSystem() {
       username: $('#login-username').val(),
       password: $('#login-password').val()
     };
-    
+
     $.ajax({
       url: CONFIG.API.LOGIN,
       method: 'POST',
@@ -162,10 +92,15 @@ function initAuthSystem() {
       success: function(response) {
         if (response.success) {
           localStorage.setItem('auth_token', response.token);
+          localStorage.setItem('user', JSON.stringify(response.user)); // Сохраняем данные пользователя
+          updateAuthUI(); // Обновляем интерфейс
           window.location.href = 'profile.html';
         } else {
           $('#login-error').text(response.message).show();
         }
+      },
+      error: function() {
+        $('#login-error').text('Ошибка сервера').show();
       }
     });
   });
@@ -178,7 +113,7 @@ function initAuthSystem() {
       email: $('#reg-email').val(),
       password: $('#reg-password').val()
     };
-    
+
     $.ajax({
       url: CONFIG.API.REGISTER,
       method: 'POST',
@@ -191,6 +126,9 @@ function initAuthSystem() {
         } else {
           $('#register-error').text(response.message).show();
         }
+      },
+      error: function() {
+        $('#register-error').text('Ошибка регистрации').show();
       }
     });
   });
@@ -198,39 +136,66 @@ function initAuthSystem() {
   // Выход
   $('[data-logout]').click(function() {
     localStorage.removeItem('auth_token');
+    localStorage.removeItem('user');
+    updateAuthUI();
     window.location.href = 'index.html';
   });
 }
 
+// === Функция обновления кнопок авторизации ===
+function updateAuthUI() {
+  const token = localStorage.getItem('auth_token');
+  const userJSON = localStorage.getItem('user');
+
+  const loginLink = $('#auth-login');
+  const profileLink = $('#auth-profile');
+  const adminLink = $('#auth-admin');
+
+  if (token && userJSON) {
+    const user = JSON.parse(userJSON);
+
+    loginLink.hide();
+    profileLink.show().text(user.username);
+
+    if (parseInt(user.is_admin) === 1) {
+      adminLink.show();
+    } else {
+      adminLink.hide();
+    }
+  } else {
+    loginLink.show();
+    profileLink.hide();
+    adminLink.hide();
+  }
+}
+
 /* ===== АДМИН-ПАНЕЛЬ ===== */
 function initAdminPanel() {
-  // Drag & Drop для изображений
   const $dropArea = $('.drop-area');
-  
-  $dropArea.on('dragover', function(e) {
+
+  $dropArea.on('dragover', function (e) {
     e.preventDefault();
     $(this).addClass('dragover');
-  }).on('dragleave drop', function() {
+  }).on('dragleave drop', function () {
     $(this).removeClass('dragover');
-  }).on('drop', function(e) {
+  }).on('drop', function (e) {
     e.preventDefault();
     const file = e.originalEvent.dataTransfer.files[0];
     handleImageUpload(file);
   });
 
-  $('#news-image').change(function() {
+  $('#news-image').change(function () {
     handleImageUpload(this.files[0]);
   });
 
-  // Добавление новости
-  $('#addNewsForm').submit(function(e) {
+  $('#addNewsForm').submit(function (e) {
     e.preventDefault();
     const formData = {
       title: $('#news-title').val(),
       content: $('#news-content').val(),
       image: $('#news-image-preview').attr('src') || ''
     };
-    
+
     $.ajax({
       url: CONFIG.API.ADD_NEWS,
       method: 'POST',
@@ -239,7 +204,7 @@ function initAdminPanel() {
       headers: {
         'Authorization': 'Bearer ' + localStorage.getItem('auth_token')
       },
-      success: function(response) {
+      success: function (response) {
         if (response.success) {
           alert('Новость добавлена!');
           $('#addNewsForm')[0].reset();
@@ -254,8 +219,22 @@ function handleImageUpload(file) {
   if (!file.type.match('image.*')) return;
 
   const reader = new FileReader();
-  reader.onload = function(e) {
+  reader.onload = function (e) {
     $('.image-preview').html(`<img id="news-image-preview" src="${e.target.result}">`);
   };
   reader.readAsDataURL(file);
 }
+
+function updateAuthState() {
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    if (user) {
+        $('.auth-link').html('<a href="profile.html"><i class="fas fa-user"></i> Профиль</a>');
+    } else {
+        $('.auth-link').html('<a href="login.html"><i class="fas fa-sign-in-alt"></i> Вход</a>');
+    }
+}
+
+// Вызываем при загрузке каждой страницы
+$(document).ready(function() {
+    updateAuthState();
+});

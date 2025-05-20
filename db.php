@@ -1,14 +1,14 @@
 <?php
-$host = 'localhost';
-$dbname = 'news_platform';
-$username = 'root';
-$password = 'root';
+session_start();
 
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-} catch (PDOException $e) {
-    die(json_encode(['error' => 'Database connection failed: ' . $e->getMessage()]));
+$host = 'localhost';
+$user = 'root'; // замените на ваши данные
+$password = 'root'; // замените на ваши данные
+$dbname = 'news_platform'; // имя вашей БД
+
+$conn = new mysqli($host, $user, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Ошибка подключения: " . $conn->connect_error);
 }
 ?>
