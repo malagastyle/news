@@ -18,22 +18,25 @@
     });
 </script>
 <body>
-    <header>
-        <div class="container">
-            <div class="logo">
-                <h1><i class="fas fa-newspaper"></i> Районные Вести</h1>
-                <p>Самые свежие новости нашего района</p>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="#" class="active">Главная</a></li>
-                    <li><a href="about.html">О районе</a></li>
-                    <li><a href="contacts.html">Контакты</a></li>
-                    <li class="auth-link"><a href="login.html">Вход</a></li>
-                </ul>
-            </nav>
+   <header>
+    <div class="container">
+        <div class="logo">
+            <h1><i class="fas fa-newspaper"></i> Районные Вести</h1>
+            <p>Самые свежие новости нашего района</p>
         </div>
-    </header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="about.html">О районе</a></li>
+                <li><a href="contacts.html">Контакты</a></li>
+                <li id="auth-link">
+                    <a href="login.html" id="login-btn"><i class="fas fa-sign-in-alt"></i> Вход</a>
+                    <a href="profile.html" id="profile-btn" style="display:none;"><i class="fas fa-user"></i> Профиль</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
 
     <div class="hero">
         <div class="container">

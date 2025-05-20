@@ -1,30 +1,26 @@
 <?php
-include '../../config.php';
+session_start();
+require_once 'db.php';
 
-$data = json_decode(file_get_contents('php://input'), true);
-$username = $conn->real_escape_string($data['username']);
-$password = $data['password'];
+if (isset($_SESSION['user'])) {
+    header('Location: profile.php');
+    exit;
+}
 
-$sql = "SELECT * FROM users WHERE username = '$username'";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    $user = $result->fetch_assoc();
-
-    if (password_verify($password, $user['password'])) {
-        echo json_encode([
-            'success' => true,
-            'token' => bin2hex(random_bytes(50)), // или JWT
-            'user' => [
-                'id' => $user['id'],
-                'username' => $user['username'],
-                'is_admin' => $user['is_admin']
-            ]
-        ]);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+    $stmt->execute([$email]);
+    $user = $stmt->fetch();
+    
+    if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['user'] = $user;
+        header('Location: profile.php');
+        exit;
     } else {
-        echo json_encode(['success' => false, 'message' => 'Неверный пароль']);
+        $error = "Неверный email или пароль";
     }
-} else {
-    echo json_encode(['success' => false, 'message' => 'Пользователь не найден']);
 }
 ?>

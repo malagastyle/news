@@ -17,6 +17,11 @@
         
         <form id="registerForm">
             <div class="form-group">
+                <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
                 <label for="username"><i class="fas fa-user"></i> Логин</label>
                 <input type="text" id="username" name="username" required>
             </div>
@@ -24,6 +29,11 @@
             <div class="form-group">
                 <label for="password"><i class="fas fa-key"></i> Пароль</label>
                 <input type="password" id="password" name="password" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirm-password"><i class="fas fa-key"></i> Подтвердите пароль</label>
+                <input type="password" id="confirm-password" name="confirm-password" required>
             </div>
             
             <button type="submit" class="auth-btn">Зарегистрироваться</button>
@@ -39,12 +49,21 @@
             $('#registerForm').submit(function(e) {
                 e.preventDefault();
                 
+                const email = $('#email').val();
                 const username = $('#username').val();
                 const password = $('#password').val();
+                const confirmPassword = $('#confirm-password').val();
+                
+                // Проверка совпадения паролей
+                if(password !== confirmPassword) {
+                    $('#register-error').text('Пароли не совпадают');
+                    return;
+                }
                 
                 // Простая регистрация (в реальном проекте нужна проверка)
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('username', username);
+                localStorage.setItem('email', email);
                 
                 // Перенаправляем на главную
                 window.location.href = 'index.html';

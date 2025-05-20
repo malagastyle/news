@@ -25,29 +25,32 @@
 </script>
 <body>
     <header>
-        <div class="container">
-            <div class="logo">
-                <h1><i class="fas fa-newspaper"></i> Районные Вести</h1>
-                <p>Самые свежие новости нашего района</p>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Главная</a></li>
-                    <li><a href="about.html">О районе</a></li>
-                    <li><a href="contacts.html">Контакты</a></li>
-                    <li class="auth-link"><a href="profile.html"><i class="fas fa-user"></i> Профиль</a></li>
-                </ul>
-            </nav>
+    <div class="container">
+        <div class="logo">
+            <h1><i class="fas fa-newspaper"></i> Районные Вести</h1>
+            <p>Самые свежие новости нашего района</p>
         </div>
-    </header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="about.html">О районе</a></li>
+                <li><a href="contacts.html">Контакты</a></li>
+                <li id="auth-link">
+                    <a href="login.html" id="login-btn"><i class="fas fa-sign-in-alt"></i> Вход</a>
+                    <a href="profile.html" id="profile-btn" style="display:none;"><i class="fas fa-user"></i> Профиль</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
 
-    <main class="container profile-container">
+     <main class="container profile-container">
         <div class="profile-header">
             <div class="profile-avatar">
                 <i class="fas fa-user-circle"></i>
             </div>
-            <h1 id="profile-name">Администратор</h1>
-            <p id="profile-email">admin@raion-vesti.ru</p>
+            <h1 id="profile-username"></h1>
+            <p id="profile-email"></p>
         </div>
         
         <div class="profile-content">
@@ -55,30 +58,27 @@
                 <h2><i class="fas fa-info-circle"></i> Личная информация</h2>
                 <div class="info-item">
                     <span class="info-label"><i class="fas fa-user"></i> Имя:</span>
-                    <span id="user-name" class="info-value">Администратор</span>
+                    <span id="user-name" class="info-value"></span>
                 </div>
                 <div class="info-item">
                     <span class="info-label"><i class="fas fa-envelope"></i> Email:</span>
-                    <span id="user-email" class="info-value">admin@raion-vesti.ru</span>
+                    <span id="user-email" class="info-value"></span>
                 </div>
                 <div class="info-item">
                     <span class="info-label"><i class="fas fa-calendar"></i> Дата регистрации:</span>
-                    <span class="info-value">01.01.2023</span>
+                    <span id="user-regdate" class="info-value"></span>
                 </div>
             </div>
 
-            <!-- Админ-панель (только для admin) -->
-            <div id="admin-panel" class="admin-panel">
+            <!-- Админ-панель (только для админа) -->
+            <div id="admin-panel" class="admin-panel" style="display:none;">
                 <h2><i class="fas fa-cog"></i> Административная панель</h2>
                 <div class="admin-actions">
-                    <a href="#" class="admin-btn">
+                    <a href="admin/news.html" class="admin-btn">
                         <i class="fas fa-newspaper"></i> Управление новостями
                     </a>
-                    <a href="#" class="admin-btn">
+                    <a href="admin/users.html" class="admin-btn">
                         <i class="fas fa-users"></i> Управление пользователями
-                    </a>
-                    <a href="#" class="admin-btn">
-                        <i class="fas fa-cogs"></i> Настройки сайта
                     </a>
                 </div>
             </div>
@@ -91,55 +91,26 @@
         </div>
     </main>
 
+    <!-- Общий footer -->
     <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>Контакты</h4>
-                    <p><i class="fas fa-map-marker-alt"></i> ул. Центральная, 15</p>
-                    <p><i class="fas fa-phone"></i> +7 (916) 755-77-55</p>
-                    <p><i class="fas fa-envelope"></i> info@raion-vesti.ru</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Мы в соцсетях</h4>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-vk"></i></a>
-                        <a href="#"><i class="fab fa-telegram"></i></a>
-                        <a href="#"><i class="fab fa-odnoklassniki"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>&copy; 2023 Районные Вести. Все права защищены.</p>
-            </div>
-        </div>
+        <!-- ... (ваш текущий footer) ... -->
     </footer>
 
     <script>
         $(document).ready(function() {
-            // Проверяем авторизацию
-            const user = JSON.parse(localStorage.getItem('currentUser'));
-            if (!user) {
-                window.location.href = 'login.html';
-                return;
-            }
-
+            const user = checkAuth(); // Проверяем авторизацию
+            
             // Заполняем данные профиля
-            $('#profile-name').text(user.name || user.username);
-            $('#profile-email').text(user.email || 'Не указан');
-            $('#user-name').text(user.name || user.username);
-            $('#user-email').text(user.email || 'Не указан');
-
-            // Показываем админ-панель только для admin
-            if (user.username !== "admin" || !user.isAdmin) {
-                $('#admin-panel').hide();
+            $('#profile-username').text(user.username);
+            $('#profile-email').text(user.email);
+            $('#user-name').text(user.username);
+            $('#user-email').text(user.email);
+            $('#user-regdate').text(new Date(user.created_at).toLocaleDateString());
+            
+            // Показываем админ-панель только для админа
+            if (user.is_admin == 1) {
+                $('#admin-panel').show();
             }
-
-            // Выход из системы
-            $('#logout-btn').click(function() {
-                localStorage.removeItem('currentUser');
-                window.location.href = 'index.html';
-            });
         });
     </script>
 </body>
