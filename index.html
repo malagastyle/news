@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Районные Вести</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1><i class="fas fa-newspaper"></i> Районные Вести</h1>
+                <p>Самые свежие новости нашего района</p>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">Главная</a></li>
+                    <li><a href="about.html">О районе</a></li>
+                    <li><a href="contacts.html">Контакты</a></li>
+                    <li class="auth-link"><a href="login.html">Вход</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="hero">
+        <div class="container">
+            <h2>Добро пожаловать на официальный сайт новостей нашего района</h2>
+            <p>Будьте в курсе всех событий</p>
+        </div>
+    </div>
+
+    <div class="district-slider">
+        <div class="slides-container">
+            <div class="slide active">
+                <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Реконструкция парка">
+                <div class="slide-content">
+                    <h3>Детский сад №3 снова открыт!</h3>
+                    <p>Завершены работы по благоустройству главного детского сада района, открыты новые бассейны, спортивные залы, обустроили новую площадку.</p>
+                </div>
+            </div>
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Новая школа">
+                <div class="slide-content">
+                    <h3>Открытие новой школы</h3>
+                    <p>Школа №45 приняла первых учеников. Современное здание оборудовано по последним стандартам.</p>
+                </div>
+            </div>
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Спортивный комплекс">
+                <div class="slide-content">
+                    <h3>Новый спортивный комплекс</h3>
+                    <p>В районе открылся многофункциональный спортивный центр с бассейном и тренажерными залами.</p>
+                </div>
+            </div>
+        </div>
+        <button class="slider-control prev"><i class="fas fa-chevron-left"></i></button>
+        <button class="slider-control next"><i class="fas fa-chevron-right"></i></button>
+        <div class="slider-dots"></div>
+    </div>
+
+    <main class="container">
+        <section class="news-grid">
+            <article class="news-card featured">
+                <div class="news-image" style="background-image: url('images/news1.jpeg')"></div>
+                <div class="news-content">
+                    <span class="news-date">15 апреля 2025</span>
+                    <h3>Открытие нового парка в центре района</h3>
+                    <p>Сегодня состоялось торжественное открытие обновленного центрального парка с новыми детскими площадками и зонами отдыха.</p>
+                    <a href="#" class="read-more">Читать далее <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </article>
+
+            <article class="news-card">
+                <div class="news-image" style="background-image: url('images/news2.jpg')"></div>
+                <div class="news-content">
+                    <span class="news-date">14 апреля 2023</span>
+                    <h3>Ремонт дорог начался в северной части района</h3>
+                    <p>Администрация района сообщает о начале ремонтных работ на основных магистралях.</p>
+                    <a href="#" class="read-more">Читать далее <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </article>
+
+            <article class="news-card">
+                <div class="news-image" style="background-image: url('images/news3.jpg')"></div>
+                <div class="news-content">
+                    <span class="news-date">12 апреля 2025</span>
+                    <h3>Фестиваль весны пройдет в эти выходные</h3>
+                    <p>Традиционный весенний фестиваль с ярмаркой, концертами и конкурсами.</p>
+                    <a href="#" class="read-more">Читать далее <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </article>
+        </section>
+
+        <aside class="sidebar">
+            <div class="weather-widget">
+                <h3>Погода в районе</h3>
+                <div class="weather-info">
+                    <i class="fas fa-sun"></i>
+                    <span>+18°C</span>
+                    <p>Ясно, без осадков</p>
+                </div>
+            </div>
+
+            <div class="important-news">
+                <h3>Важные объявления</h3>
+                <ul>
+                    <li><a href="water_outage.html">Отключение воды 18 апреля</a></li>
+                    <li><a href="reception.html">Прием граждан главой района</a></li>
+                    <li><a href="contest.html">Конкурс на лучший двор</a></li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Контакты</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> ул. Центральная, 15</p>
+                    <p><i class="fas fa-phone"></i> +7 (916) 755-77-55</p>
+                    <p><i class="fas fa-envelope"></i> info@raion-vesti.ru</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Мы в соцсетях</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-vk"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-odnoklassniki"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 Районные Вести. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        $(document).ready(function() {
+            // Инициализация слайдера
+            const $slider = $('.district-slider');
+            const $slidesContainer = $('.slides-container');
+            const $slides = $('.slide');
+            const $prevBtn = $('.slider-control.prev');
+            const $nextBtn = $('.slider-control.next');
+            const $dotsContainer = $('.slider-dots');
+            
+            let currentSlide = 0;
+            let slideInterval;
+            const slideDuration = 5000; // 5 секунд
+            
+            // Создаем точки для навигации
+            $slides.each(function(index) {
+                $dotsContainer.append(`<div class="slider-dot" data-index="${index}"></div>`);
+            });
+            
+            const $dots = $('.slider-dot');
+            $dots.first().addClass('active');
+            
+            // Функция переключения слайда
+            function goToSlide(index) {
+                currentSlide = index;
+                const translateX = -currentSlide * 100;
+                $slidesContainer.css('transform', `translateX(${translateX}%)`);
+                
+                // Обновляем активный слайд и точки
+                $slides.removeClass('active');
+                $slides.eq(currentSlide).addClass('active');
+                $dots.removeClass('active');
+                $dots.eq(currentSlide).addClass('active');
+            }
+            
+            // Автоматическое переключение
+            function startSlider() {
+                slideInterval = setInterval(() => {
+                    const nextSlide = (currentSlide + 1) % $slides.length;
+                    goToSlide(nextSlide);
+                }, slideDuration);
+            }
+            
+            function stopSlider() {
+                clearInterval(slideInterval);
+            }
+            
+            // Обработчики событий
+            $nextBtn.click(function() {
+                stopSlider();
+                const nextSlide = (currentSlide + 1) % $slides.length;
+                goToSlide(nextSlide);
+                startSlider();
+            });
+            
+            $prevBtn.click(function() {
+                stopSlider();
+                const prevSlide = (currentSlide - 1 + $slides.length) % $slides.length;
+                goToSlide(prevSlide);
+                startSlider();
+            });
+            
+            $dots.click(function() {
+                stopSlider();
+                const slideIndex = $(this).data('index');
+                goToSlide(slideIndex);
+                startSlider();
+            });
+            
+            // Запускаем слайдер
+            startSlider();
+            
+            // Останавливаем при наведении
+            $slider.hover(stopSlider, startSlider);
+        });
+    </script>
+</body>
+</html>

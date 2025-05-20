@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель | Районные Вести</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="admin-panel-page">
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1><i class="fas fa-newspaper"></i> Районные Вести</h1>
+                <p>Самые свежие новости нашего района</p>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="profile.html">Профиль</a></li>
+                    <li><a href="#" data-logout>Выйти</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="admin-panel-container">
+        <h1><i class="fas fa-cog"></i> Админ-панель</h1>
+        
+        <div class="admin-section">
+            <h2><i class="fas fa-plus-circle"></i> Добавить новость</h2>
+            <form id="addNewsForm" class="admin-form">
+                <div class="form-group">
+                    <label for="news-title">Заголовок</label>
+                    <input type="text" id="news-title" required>
+                    
+            <div class="image-upload">
+                <div class="drop-area">
+                    <p>Перетащите изображение сюда или</p>
+                    <input type="file" id="news-image" accept="image/*">
+                    <label for="news-image">Выбрать файл</label>
+             </div>
+                    <div class="image-preview"></div>
+        </div>
+
+<div class="news-management">
+  <h2><i class="fas fa-list"></i> Список новостей</h2>
+  <div class="news-list"></div>
+</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="news-content">Текст новости</label>
+                    <textarea id="news-content" rows="6" required></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Опубликовать</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

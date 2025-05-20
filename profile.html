@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль | Районные Вести</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .logout-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            text-decoration: none;
+        }
+        .admin-panel-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            margin-right: 10px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body class="profile-page">
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1><i class="fas fa-newspaper"></i> Районные Вести</h1>
+                <p>Самые свежие новости нашего района</p>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="about.html">О районе</a></li>
+                    <li><a href="contacts.html">Контакты</a></li>
+                    <li><a href="profile.html">Профиль</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="profile-container">
+        <div class="profile-info">
+            <h2 id="profile-username"></h2>
+            <p id="profile-email"></p>
+            
+            <div id="admin-panel-container" style="display: none;">
+                <a href="admin-panel.html" class="admin-panel-btn">
+                    <i class="fas fa-cog"></i> Админ-панель
+                </a>
+            </div>
+            
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Выйти
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userData = JSON.parse(localStorage.getItem('current_user'));
+            if (userData) {
+                document.getElementById('profile-username').textContent = userData.username;
+                document.getElementById('profile-email').textContent = userData.email;
+                
+                if (userData.username === 'admin' && userData.email === 'malagastyle@gmail.com') {
+                    document.getElementById('admin-panel-container').style.display = 'block';
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('news_site_auth');
+            localStorage.removeItem('current_user');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
