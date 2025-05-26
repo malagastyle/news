@@ -6,89 +6,109 @@
     <title>Профиль | Районные Вести</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        .logout-btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 20px;
-            text-decoration: none;
-        }
-        .admin-panel-btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 20px;
-            margin-right: 10px;
-            text-decoration: none;
-        }
-    </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
-<body class="profile-page">
+<script>
+    $(document).ready(function() {
+        // Проверяем авторизацию
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.href = 'login.html';
+        }
+        
+        // Кнопка выхода
+        $('#logout-btn').click(function() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
+            window.location.href = 'index.html';
+        });
+    });
+</script>
+<body>
     <header>
-        <div class="container">
-            <div class="logo">
-                <h1><i class="fas fa-newspaper"></i> Районные Вести</h1>
-                <p>Самые свежие новости нашего района</p>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Главная</a></li>
-                    <li><a href="about.html">О районе</a></li>
-                    <li><a href="contacts.html">Контакты</a></li>
-                    <li><a href="profile.html">Профиль</a></li>
-                </ul>
-            </nav>
+    <div class="container">
+        <div class="logo">
+            <h1><i class="fas fa-newspaper"></i> Районные Вести</h1>
+            <p>Самые свежие новости нашего района</p>
         </div>
-    </header>
-
-    <div class="profile-container">
-        <div class="profile-info">
-            <h2 id="profile-username"></h2>
-            <p id="profile-email"></p>
-            
-            <div id="admin-panel-container" style="display: none;">
-                <a href="admin-panel.html" class="admin-panel-btn">
-                    <i class="fas fa-cog"></i> Админ-панель
-                </a>
-            </div>
-            
-            <button class="logout-btn" onclick="logout()">
-                <i class="fas fa-sign-out-alt"></i> Выйти
-            </button>
-        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="about.html">О районе</a></li>
+                <li><a href="contacts.html">Контакты</a></li>
+                <li id="auth-link">
+                    <a href="profile.html" id="profile-btn" style="display:none;"><i class="fas fa-user"></i> Профиль</a>
+                </li>
+            </ul>
+        </nav>
     </div>
+</header>
+
+     <main class="container profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <h1 id="profile-username"></h1>
+            <p id="profile-email"></p>
+        </div>
+        
+        <div class="profile-content">
+            <div class="user-info">
+                <h2><i class="fas fa-info-circle"></i> Личная информация</h2>
+                <div class="info-item">
+                    <span class="info-label"><i class="fas fa-user"></i> Имя:</span>
+                    <span id="user-name" class="info-value"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label"><i class="fas fa-envelope"></i> Email:</span>
+                    <span id="user-email" class="info-value"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label"><i class="fas fa-calendar"></i> Дата регистрации:</span>
+                    <span id="user-regdate" class="info-value"></span>
+                </div>
+            </div>
+
+            <!-- Админ-панель (только для админа) -->
+            <div id="admin-panel" class="admin-panel" style="display:none;">
+                <h2><i class="fas fa-cog"></i> Административная панель</h2>
+                <div class="admin-actions">
+                    <a href="admin/news.html" class="admin-btn">
+                        <i class="fas fa-newspaper"></i> Управление новостями
+                    </a>
+                    <a href="admin/users.html" class="admin-btn">
+                        <i class="fas fa-users"></i> Управление пользователями
+                    </a>
+                </div>
+            </div>
+            
+            <div class="profile-actions">
+                <button id="logout-btn" class="btn btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Выйти
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+    </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const userData = JSON.parse(localStorage.getItem('current_user'));
-            if (userData) {
-                document.getElementById('profile-username').textContent = userData.username;
-                document.getElementById('profile-email').textContent = userData.email;
-                
-                if (userData.username === 'admin' && userData.email === 'malagastyle@gmail.com') {
-                    document.getElementById('admin-panel-container').style.display = 'block';
-                }
-            } else {
-                window.location.href = 'login.html';
+        $(document).ready(function() {
+            const user = checkAuth(); // Проверяем авторизацию
+            
+            // Заполняем данные профиля
+            $('#profile-username').text(user.username);
+            $('#profile-email').text(user.email);
+            $('#user-name').text(user.username);
+            $('#user-email').text(user.email);
+            $('#user-regdate').text(new Date(user.created_at).toLocaleDateString());
+            
+            // Показываем админ-панель только для админа
+            if (user.is_admin == 1) {
+                $('#admin-panel').show();
             }
         });
-
-        function logout() {
-            localStorage.removeItem('news_site_auth');
-            localStorage.removeItem('current_user');
-            window.location.href = 'index.html';
-        }
     </script>
 </body>
 </html>

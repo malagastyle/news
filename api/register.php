@@ -1,82 +1,52 @@
 <?php
-require_once '../db.php';
+session_start();
+require_once 'db.php';
 
-// Включим максимальное логирование
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-header('Content-Type: application/json');
+if (isset($_SESSION['user'])) {
+    header('Location: profile.php');
+    exit;
+}
 
-file_put_contents('register.log', "\n\n".date('Y-m-d H:i:s')." - New registration attempt\n", FILE_APPEND);
-
-try {
-    // Получаем RAW данные
-    $input = file_get_contents('php://input');
-    file_put_contents('register.log', "Raw input: $input\n", FILE_APPEND);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'];
+    $username = $_POST['username'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
     
-    $data = json_decode($input, true);
-    if (!$data) {
-        throw new Exception('Invalid JSON: '.json_last_error_msg());
-    }
-
-    $username = trim($data['username'] ?? '');
-    $email = trim($data['email'] ?? '');
-    $password = $data['password'] ?? '';
-
-    file_put_contents('register.log', "Data: ".print_r($data, true)."\n", FILE_APPEND);
-
-    // Валидация
-    if (empty($username)) throw new Exception('Username is required');
-    if (empty($email)) throw new Exception('Email is required');
-    if (empty($password)) throw new Exception('Password is required');
-    if (strlen($password) < 6) throw new Exception('Password too short');
-
-    // Проверка существования пользователя
-    $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
-    $stmt->execute([$username, $email]);
+    $stmt = $pdo->prepare("INSERT INTO users (email, username, password) VALUES (?, ?, ?)");
+    $stmt->execute([$email, $username, $password]);
     
-    if ($stmt->rowCount() > 0) {
-        throw new Exception('User already exists');
-    }
-
-    // Хеширование пароля
-    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-    file_put_contents('register.log', "Password hashed: $hashedPassword\n", FILE_APPEND);
-
-    // Вставка пользователя
-    $stmt = $pdo->prepare("INSERT INTO users (username, email, password, register_date) VALUES (?, ?, ?, CURDATE())");
-    $result = $stmt->execute([$username, $email, $hashedPassword]);
+    $_SESSION['user'] = [
+        'id' => $pdo->lastInsertId(),
+        'email' => $email,
+        'username' => $username,
+        'is_admin' => 0
+    ];
     
-    if (!$result) {
-        $error = $stmt->errorInfo();
-        throw new Exception('DB error: '.$error[2]);
-    }
-
-    $userId = $pdo->lastInsertId();
-    file_put_contents('register.log', "User created with ID: $userId\n", FILE_APPEND);
-
-    // Получаем данные пользователя
-    $stmt = $pdo->prepare("SELECT id, username, email, register_date FROM users WHERE id = ?");
-    $stmt->execute([$userId]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    http_response_code(201);
-    echo json_encode([
-        'success' => true,
-        'user' => $user,
-        'debug' => [
-            'input' => $input,
-            'raw_data' => $data
-        ]
-    ]);
-
-} catch (Exception $e) {
-    file_put_contents('register.log', "ERROR: ".$e->getMessage()."\n", FILE_APPEND);
-    
-    http_response_code(400);
-    echo json_encode([
-        'success' => false,
-        'message' => $e->getMessage(),
-        'trace' => $e->getTraceAsString()
-    ]);
+    header('Location: profile.php');
+    exit;
 }
 ?>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <?php include 'header.php'; ?>
+    
+    <div class="auth-form">
+        <h2>Регистрация</h2>
+        <form method="POST">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="text" name="username" placeholder="Имя пользователя" required>
+            <input type="password" name="password" placeholder="Пароль" required>
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+        <p>Уже есть аккаунт? <a href="login.php">Войти</a></p>
+    </div>
+    
+    <?php include 'footer.php'; ?>
+</body>
+</html>
