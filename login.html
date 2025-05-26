@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вход в систему</title>
     <link rel="stylesheet" href="style.css">
+<<<<<<< HEAD
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css ">
+=======
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+>>>>>>> 42b84d3269b121dcbccbbe9dbe47458d3b86c3e6
 </head>
 <body class="auth-page">
     <div class="auth-container">
@@ -37,6 +42,7 @@
     </div>
 
     <script>
+<<<<<<< HEAD
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -57,6 +63,23 @@
 
                 if (!response.ok) {
                     throw new Error(`Ошибка HTTP: ${response.status}`);
+=======
+        $(document).ready(function() {
+            $('#loginForm').submit(function(e) {
+                e.preventDefault();
+                
+                const username = $('#username').val();
+                const password = $('#password').val();
+                
+                if (username === "admin" && password === "malagastyle") {
+                    // Сохраняем данные пользователя
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('username', username);
+                    // Перенаправляем на главную
+                    window.location.href = 'index.html';
+                } else {
+                    $('#login-error').text('Неверный логин или пароль').show();
+>>>>>>> 42b84d3269b121dcbccbbe9dbe47458d3b86c3e6
                 }
 
                 const data = await response.json();

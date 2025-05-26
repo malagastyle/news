@@ -17,7 +17,11 @@ $user = $stmt->fetch();
 <head>
     <meta charset="UTF-8">
     <title>Профиль</title>
+<<<<<<< HEAD
     <link rel="stylesheet" href="style.css">
+=======
+    <link rel="stylesheet" href="css/style.css">
+>>>>>>> 42b84d3269b121dcbccbbe9dbe47458d3b86c3e6
 </head>
 <body>
     <?php include 'header.php'; ?>
@@ -39,6 +43,10 @@ $user = $stmt->fetch();
         <a href="logout.php">Выйти</a>
     </div>
     
+<<<<<<< HEAD
    <?php include 'footer.php'; ?>
+=======
+    <?php include 'footer.php'; ?>
+>>>>>>> 42b84d3269b121dcbccbbe9dbe47458d3b86c3e6
 </body>
 </html>

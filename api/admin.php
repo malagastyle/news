@@ -1,5 +1,9 @@
 <?php
+<<<<<<< HEAD
 include 'db.php';
+=======
+include 'config.php';
+>>>>>>> 42b84d3269b121dcbccbbe9dbe47458d3b86c3e6
 
 if (!isset($_SESSION['user']) || !$_SESSION['user']['is_admin']) {
     header("Location: index.php");

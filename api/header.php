@@ -1,8 +1,12 @@
+<<<<<<< HEAD
 <?php session_start(); ?>
+=======
+>>>>>>> 42b84d3269b121dcbccbbe9dbe47458d3b86c3e6
 <nav>
     <a href="index.php">Главная</a>
     <a href="about.php">О районе</a>
     <a href="contacts.php">Контакты</a>
+<<<<<<< HEAD
     
     <?php if (isset($_SESSION['user'])): ?>
         <?php if ($_SESSION['user']['is_admin']): ?>
@@ -21,5 +25,11 @@
         <a href="login.html" class="auth-btn login-btn">
             <i class="fas fa-sign-in-alt"></i> Вход
         </a>
+=======
+    <?php if (isset($_SESSION['user'])): ?>
+        <a href="profile.php">Профиль</a>
+    <?php else: ?>
+        <a href="login.php">Вход</a>
+>>>>>>> 42b84d3269b121dcbccbbe9dbe47458d3b86c3e6
     <?php endif; ?>
 </nav>

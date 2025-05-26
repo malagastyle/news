@@ -8,7 +8,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css ">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js "></script>
 </head>
+<script>
+    $(document).ready(function() {
+        // Проверяем авторизацию
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+            // Меняем "Вход" на "Профиль"
+            $('.auth-link').html('<a href="profile.html"><i class="fas fa-user"></i> Профиль</a>');
+        }
+    });
+</script>
 <body>
+<<<<<<< HEAD
 <script>
     // Устанавливаем флаг авторизации из URL параметра
     const urlParams = new URLSearchParams(window.location.search);
@@ -26,6 +36,9 @@
 </script>
 
 <header>
+=======
+   <header>
+>>>>>>> 42b84d3269b121dcbccbbe9dbe47458d3b86c3e6
     <div class="container">
         <div class="logo">
             <h1><i class="fas fa-newspaper"></i> Районные Вести</h1>

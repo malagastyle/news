@@ -14,6 +14,10 @@ $(document).ready(function () {
   loadNews();
   initAuthSystem();
   updateAuthUI(); // Обновляем UI при загрузке страницы
+<<<<<<< HEAD
+=======
+
+>>>>>>> 42b84d3269b121dcbccbbe9dbe47458d3b86c3e6
   if ($('body').hasClass('admin-panel-page')) {
     initAdminPanel();
   }
@@ -23,6 +27,10 @@ $(document).ready(function () {
 function initDistrictSlider() {
   const $slider = $('.district-slider');
   if (!$slider.length) return;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 42b84d3269b121dcbccbbe9dbe47458d3b86c3e6
   let currentSlide = 0;
   const interval = setInterval(() => {
     currentSlide = (currentSlide + 1) % $slider.find('.slide').length;
@@ -89,6 +97,7 @@ function initAuthSystem() {
       data: JSON.stringify(formData),
       success: function(response) {
         if (response.success) {
+<<<<<<< HEAD
           localStorage.setItem('auth_token', 'authenticated');
           localStorage.setItem('user', JSON.stringify({
             username: formData.username,
@@ -99,6 +108,12 @@ function initAuthSystem() {
           
           // Редирект в зависимости от типа пользователя
           window.location.href = response.redirect || 'index.html';
+=======
+          localStorage.setItem('auth_token', response.token);
+          localStorage.setItem('user', JSON.stringify(response.user)); // Сохраняем данные пользователя
+          updateAuthUI(); // Обновляем интерфейс
+          window.location.href = 'profile.html';
+>>>>>>> 42b84d3269b121dcbccbbe9dbe47458d3b86c3e6
         } else {
           $('#login-error').text(response.message).show();
         }
@@ -117,6 +132,10 @@ function initAuthSystem() {
       email: $('#reg-email').val(),
       password: $('#reg-password').val()
     };
+<<<<<<< HEAD
+=======
+
+>>>>>>> 42b84d3269b121dcbccbbe9dbe47458d3b86c3e6
     $.ajax({
       url: CONFIG.API.REGISTER,
       method: 'POST',
@@ -151,6 +170,7 @@ function initAuthSystem() {
 function updateAuthUI() {
   const token = localStorage.getItem('auth_token');
   const userJSON = localStorage.getItem('user');
+<<<<<<< HEAD
   const loginLink = $('#auth-login');
   const profileLink = $('#auth-profile');
   const adminLink = $('#auth-admin');
@@ -170,3 +190,97 @@ function updateAuthUI() {
     adminLink.hide();
   }
 }
+=======
+
+  const loginLink = $('#auth-login');
+  const profileLink = $('#auth-profile');
+  const adminLink = $('#auth-admin');
+
+  if (token && userJSON) {
+    const user = JSON.parse(userJSON);
+
+    loginLink.hide();
+    profileLink.show().text(user.username);
+
+    if (parseInt(user.is_admin) === 1) {
+      adminLink.show();
+    } else {
+      adminLink.hide();
+    }
+  } else {
+    loginLink.show();
+    profileLink.hide();
+    adminLink.hide();
+  }
+}
+
+/* ===== АДМИН-ПАНЕЛЬ ===== */
+function initAdminPanel() {
+  const $dropArea = $('.drop-area');
+
+  $dropArea.on('dragover', function (e) {
+    e.preventDefault();
+    $(this).addClass('dragover');
+  }).on('dragleave drop', function () {
+    $(this).removeClass('dragover');
+  }).on('drop', function (e) {
+    e.preventDefault();
+    const file = e.originalEvent.dataTransfer.files[0];
+    handleImageUpload(file);
+  });
+
+  $('#news-image').change(function () {
+    handleImageUpload(this.files[0]);
+  });
+
+  $('#addNewsForm').submit(function (e) {
+    e.preventDefault();
+    const formData = {
+      title: $('#news-title').val(),
+      content: $('#news-content').val(),
+      image: $('#news-image-preview').attr('src') || ''
+    };
+
+    $.ajax({
+      url: CONFIG.API.ADD_NEWS,
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(formData),
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('auth_token')
+      },
+      success: function (response) {
+        if (response.success) {
+          alert('Новость добавлена!');
+          $('#addNewsForm')[0].reset();
+          $('.image-preview').empty();
+        }
+      }
+    });
+  });
+}
+
+function handleImageUpload(file) {
+  if (!file.type.match('image.*')) return;
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    $('.image-preview').html(`<img id="news-image-preview" src="${e.target.result}">`);
+  };
+  reader.readAsDataURL(file);
+}
+
+function updateAuthState() {
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    if (user) {
+        $('.auth-link').html('<a href="profile.html"><i class="fas fa-user"></i> Профиль</a>');
+    } else {
+        $('.auth-link').html('<a href="login.html"><i class="fas fa-sign-in-alt"></i> Вход</a>');
+    }
+}
+
+// Вызываем при загрузке каждой страницы
+$(document).ready(function() {
+    updateAuthState();
+});
+>>>>>>> 42b84d3269b121dcbccbbe9dbe47458d3b86c3e6

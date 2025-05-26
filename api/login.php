@@ -1,5 +1,6 @@
 <?php
 session_start();
+<<<<<<< HEAD
 require_once 'api/db.php';
 
 // Если пользователь уже авторизован, перенаправляем
@@ -93,3 +94,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </body>
 </html>
+=======
+require_once 'db.php';
+
+if (isset($_SESSION['user'])) {
+    header('Location: profile.php');
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+    $stmt->execute([$email]);
+    $user = $stmt->fetch();
+    
+    if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['user'] = $user;
+        header('Location: profile.php');
+        exit;
+    } else {
+        $error = "Неверный email или пароль";
+    }
+}
+?>
+>>>>>>> 42b84d3269b121dcbccbbe9dbe47458d3b86c3e6

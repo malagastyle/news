@@ -2296,6 +2296,7 @@ body.auth-page {
 .auth-footer {
     text-align: center;
     margin-top: 20px;
+<<<<<<< HEAD
 }
 
 /* Auth buttons styles */
@@ -2335,3 +2336,6 @@ body.auth-page {
     box-shadow: var(--shadow);
 }
 
+=======
+}
+>>>>>>> 42b84d3269b121dcbccbbe9dbe47458d3b86c3e6
